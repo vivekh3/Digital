@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../Documents/GitHub/AndroidProjects/WatchFace" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Documents/GitHub/DigitalWatch_v1" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Documents/GitHub/DigitalWatch_v1/V1" vcs="Git" />
   </component>
