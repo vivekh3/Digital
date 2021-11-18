@@ -71,6 +71,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mWeakReference = new WeakReference<>(reference);
         }
 
+
+
         @Override
         public void handleMessage(Message msg) {
             MyWatchFace.Engine engine = mWeakReference.get();
@@ -87,21 +89,31 @@ public class MyWatchFace extends CanvasWatchFaceService {
     private class Engine extends CanvasWatchFaceService.Engine {
 
         private final Handler mUpdateTimeHandler = new EngineHandler(this);
+
+        private Calendar[] Cals;
+
         private Calendar mCalendar;
         private Calendar mCalendarPT;
         private Calendar mCalendarCST;
         private Calendar mCalendarSYD;
-        private Calendar mCalendarSyD2
+        private Calendar mCalendarSyD2;
 
         private Calendar mCalendarLON;
+
+
         private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mCalendar.setTimeZone(TimeZone.getDefault());
-                mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-                mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
-                mCalendarSYD.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
-                mCalendarLON.setTimeZone(TimeZone.getTimeZone("Europe/London"));
+                Cals[0].setTimeZone(TimeZone.getDefault());
+                Cals[1].setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+                Cals[2].setTimeZone(TimeZone.getTimeZone("America/Chicago"));
+                Cals[3].setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+                Cals[4].setTimeZone(TimeZone.getTimeZone("Europe/London"));
+//                mCalendar.setTimeZone(TimeZone.getDefault());
+//                mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+//                mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
+//                mCalendarSYD.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+//                mCalendarLON.setTimeZone(TimeZone.getTimeZone("Europe/London"));
                 invalidate();
             }
         };
@@ -130,7 +142,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             setWatchFaceStyle(new WatchFaceStyle.Builder(MyWatchFace.this)
                     .setAcceptsTapEvents(true)
                     .build());
-
+            
             mCalendar = Calendar.getInstance();
             mCalendarPT=Calendar.getInstance();
             mCalendarCST=Calendar.getInstance();
