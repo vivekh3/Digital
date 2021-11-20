@@ -93,17 +93,23 @@ public class MyWatchFace extends CanvasWatchFaceService {
         private Calendar mCalendarSYD;
         //private Calendar mCalendarSyD2;
         private Calendar mCalendarLON;
-        private Calendar[] calendar;
+        //private Calendar[] calendar;
+        Calendar[] calendar = new Calendar[5];
+        String[] displayText=new String[5];
         private String[] timeZones={"America/Los_Angeles","America/Chicago","Australia/Sydney","Europe/London"};
         private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 calendar[0].setTimeZone(TimeZone.getDefault());
-                mCalendar.setTimeZone(TimeZone.getDefault());
-                mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-                mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
-                mCalendarSYD.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
-                mCalendarLON.setTimeZone(TimeZone.getTimeZone("Europe/London"));
+                for (int i=1;i<4;i++){
+                    calendar[i].setTimeZone(TimeZone.getTimeZone(timeZones[i-1]));
+                }
+
+                //mCalendar.setTimeZone(TimeZone.getDefault());
+                //mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+                //mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
+                //mCalendarSYD.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+                //mCalendarLON.setTimeZone(TimeZone.getTimeZone("Europe/London"));
                 invalidate();
             }
         };
@@ -133,12 +139,14 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     .setAcceptsTapEvents(true)
                     .build());
 
-            calendar[0]=Calendar.getInstance();
-            mCalendar = Calendar.getInstance();
-            mCalendarPT=Calendar.getInstance();
-            mCalendarCST=Calendar.getInstance();
-            mCalendarSYD=Calendar.getInstance();
-            mCalendarLON=Calendar.getInstance();
+            //calendar[0]=Calendar.getInstance();
+
+            for (int i=0;i<5;i++){
+                calendar[i]= Calendar.getInstance();
+
+            }
+
+
 
 
             Resources resources = MyWatchFace.this.getResources();
@@ -179,13 +187,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
                 // Update time zone in case it changed while we weren"t visible.
                 calendar[0].setTimeZone(TimeZone.getDefault());
-                mCalendar.setTimeZone(TimeZone.getDefault());
-                mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-                mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
-                mCalendarSYD.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
-                mCalendarLON.setTimeZone(TimeZone.getTimeZone("Europe/London"));
-
-
+                for (int i=1;i<5;i++){
+                    calendar[i].setTimeZone(TimeZone.getTimeZone(timeZones[i-1]));
+                }
 
                 invalidate();
             } else {
@@ -305,55 +309,27 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             long now = System.currentTimeMillis();
-            calendar[0].setTimeInMillis(now);
-            mCalendar.setTimeInMillis(now);
-            mCalendarPT.setTimeInMillis(now);
-            mCalendarCST.setTimeInMillis(now);
-            mCalendarLON.setTimeInMillis(now);
-            mCalendarSYD.setTimeInMillis(now);
 
+            for (int i=0;i<5;i++){
+                calendar[i].setTimeInMillis(now);
+            }
 
-            String text0=String.format("Local | "+calendar[0].getDisplayName(Calendar.DAY_OF_WEEK,Calendar.SHORT, Locale.ENGLISH)+" "+(calendar[0].getDisplayName(Calendar.MONTH,Calendar.SHORT,Locale.ENGLISH))+" "+calendar[0].get(Calendar.DAY_OF_MONTH));
-            String text1 = mAmbient
-                    ? String.format("%d:%02d", calendar[0].get(Calendar.HOUR_OF_DAY),
-                    calendar[0].get(Calendar.MINUTE))
-                    : String.format("%d:%02d:%02d", calendar[0].get(Calendar.HOUR_OF_DAY),
-                    calendar[0].get(Calendar.MINUTE), calendar[0].get(Calendar.SECOND));
+            String header=String.format("Local | "+calendar[0].getDisplayName(Calendar.DAY_OF_WEEK,Calendar.SHORT, Locale.ENGLISH)+" "+(calendar[0].getDisplayName(Calendar.MONTH,Calendar.SHORT,Locale.ENGLISH))+" "+calendar[0].get(Calendar.DAY_OF_MONTH));
+            canvas.drawText(header, mXOffset, mYOffset-40, mTextPaintZone);
 
-            String text2 = mAmbient
-                    ? String.format("")
-                    : String.format("PT | ")+String.format("%d:%02d", mCalendarPT.get(Calendar.HOUR_OF_DAY),
-                    mCalendarPT.get(Calendar.MINUTE));
-
-
-            String text3 = mAmbient
-                    ? String.format("")
-                    : String.format("ET | ")+ String.format("%d:%02d", mCalendarPT.get(Calendar.HOUR_OF_DAY)+3,
-                    mCalendarPT.get(Calendar.MINUTE));
-
-            String text4 = mAmbient
-                    ? String.format("")
-                    : String.format("LON | ")+ String.format("%d:%02d", mCalendarLON.get(Calendar.HOUR_OF_DAY),
-                    mCalendarLON.get(Calendar.MINUTE));
-
-            String text5 = mAmbient
-                    ? String.format("")
-                    : String.format("SYD | ")+ String.format("%d:%02d", mCalendarSYD.get(Calendar.HOUR_OF_DAY),
-                    mCalendarSYD.get(Calendar.MINUTE));
-
-            String text6 = mAmbient
-                    ? String.format("")
-                    : String.format("CST | ")+ String.format("%d:%02d", mCalendarCST.get(Calendar.HOUR_OF_DAY),
-                    mCalendarCST.get(Calendar.MINUTE));
-
-
-            canvas.drawText(text0, mXOffset, mYOffset-40, mTextPaintZone);
-            canvas.drawText(text1, mXOffset, mYOffset, mTextPaint);
-            canvas.drawText(text2, mXOffset, mYOffset+40, mTextPaintZone);
-            canvas.drawText(text3, mXOffset, mYOffset+60, mTextPaintZone);
-            canvas.drawText(text6, mXOffset, mYOffset+80, mTextPaintZone);
-            canvas.drawText(text4, mXOffset, mYOffset+100, mTextPaintZone);
-            canvas.drawText(text5, mXOffset, mYOffset+120, mTextPaintZone);
+            for (int i=0;i<5;i++){
+                 displayText[i] = mAmbient
+                        ? String.format("%02d:%02d", calendar[i].get(Calendar.HOUR_OF_DAY),
+                        calendar[i].get(Calendar.MINUTE))
+                        : String.format("%02d:%02d:%02d", calendar[i].get(Calendar.HOUR_OF_DAY),
+                        calendar[i].get(Calendar.MINUTE), calendar[i].get(Calendar.SECOND));
+                if (i==0) {
+                    canvas.drawText(displayText[i], mXOffset, mYOffset, mTextPaint);
+                }
+                else{
+                    canvas.drawText(displayText[i], mXOffset, mYOffset+20*(i+1), mTextPaintZone);
+                }
+            }
 
 
             canvas.drawText(String.valueOf(batteryPct+"%"), mXOffset+60, mYOffset+180, mTextPaintZone);
