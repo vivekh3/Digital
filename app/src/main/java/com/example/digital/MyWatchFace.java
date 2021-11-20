@@ -71,8 +71,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mWeakReference = new WeakReference<>(reference);
         }
 
-
-
         @Override
         public void handleMessage(Message msg) {
             MyWatchFace.Engine engine = mWeakReference.get();
@@ -89,31 +87,23 @@ public class MyWatchFace extends CanvasWatchFaceService {
     private class Engine extends CanvasWatchFaceService.Engine {
 
         private final Handler mUpdateTimeHandler = new EngineHandler(this);
-
-        private Calendar[] Cals;
-
         private Calendar mCalendar;
         private Calendar mCalendarPT;
         private Calendar mCalendarCST;
         private Calendar mCalendarSYD;
-        private Calendar mCalendarSyD2;
-
+        //private Calendar mCalendarSyD2;
         private Calendar mCalendarLON;
-
-
+        private Calendar[] calendar;
+        private String[] timeZones={"America/Los_Angeles","America/Chicago","Australia/Sydney","Europe/London"};
         private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Cals[0].setTimeZone(TimeZone.getDefault());
-                Cals[1].setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-                Cals[2].setTimeZone(TimeZone.getTimeZone("America/Chicago"));
-                Cals[3].setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
-                Cals[4].setTimeZone(TimeZone.getTimeZone("Europe/London"));
-//                mCalendar.setTimeZone(TimeZone.getDefault());
-//                mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-//                mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
-//                mCalendarSYD.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
-//                mCalendarLON.setTimeZone(TimeZone.getTimeZone("Europe/London"));
+                calendar[0].setTimeZone(TimeZone.getDefault());
+                mCalendar.setTimeZone(TimeZone.getDefault());
+                mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+                mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
+                mCalendarSYD.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+                mCalendarLON.setTimeZone(TimeZone.getTimeZone("Europe/London"));
                 invalidate();
             }
         };
@@ -142,7 +132,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
             setWatchFaceStyle(new WatchFaceStyle.Builder(MyWatchFace.this)
                     .setAcceptsTapEvents(true)
                     .build());
-            
+
+            calendar[0]=Calendar.getInstance();
             mCalendar = Calendar.getInstance();
             mCalendarPT=Calendar.getInstance();
             mCalendarCST=Calendar.getInstance();
@@ -187,6 +178,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 registerReceiver();
 
                 // Update time zone in case it changed while we weren"t visible.
+                calendar[0].setTimeZone(TimeZone.getDefault());
                 mCalendar.setTimeZone(TimeZone.getDefault());
                 mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
                 mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
@@ -313,6 +305,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             long now = System.currentTimeMillis();
+            calendar[0].setTimeInMillis(now);
             mCalendar.setTimeInMillis(now);
             mCalendarPT.setTimeInMillis(now);
             mCalendarCST.setTimeInMillis(now);
@@ -320,12 +313,12 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mCalendarSYD.setTimeInMillis(now);
 
 
-            String text0=String.format("Local | "+mCalendar.getDisplayName(Calendar.DAY_OF_WEEK,Calendar.SHORT, Locale.ENGLISH)+" "+(mCalendar.getDisplayName(Calendar.MONTH,Calendar.SHORT,Locale.ENGLISH))+" "+mCalendar.get(Calendar.DAY_OF_MONTH));
+            String text0=String.format("Local | "+calendar[0].getDisplayName(Calendar.DAY_OF_WEEK,Calendar.SHORT, Locale.ENGLISH)+" "+(calendar[0].getDisplayName(Calendar.MONTH,Calendar.SHORT,Locale.ENGLISH))+" "+calendar[0].get(Calendar.DAY_OF_MONTH));
             String text1 = mAmbient
-                    ? String.format("%d:%02d", mCalendar.get(Calendar.HOUR_OF_DAY),
-                    mCalendar.get(Calendar.MINUTE))
-                    : String.format("%d:%02d:%02d", mCalendar.get(Calendar.HOUR_OF_DAY),
-                    mCalendar.get(Calendar.MINUTE), mCalendar.get(Calendar.SECOND));
+                    ? String.format("%d:%02d", calendar[0].get(Calendar.HOUR_OF_DAY),
+                    calendar[0].get(Calendar.MINUTE))
+                    : String.format("%d:%02d:%02d", calendar[0].get(Calendar.HOUR_OF_DAY),
+                    calendar[0].get(Calendar.MINUTE), calendar[0].get(Calendar.SECOND));
 
             String text2 = mAmbient
                     ? String.format("")
