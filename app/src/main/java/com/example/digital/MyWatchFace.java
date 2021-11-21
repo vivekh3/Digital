@@ -140,6 +140,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     .build());
 
             //calendar[0]=Calendar.getInstance();
+            calendar[0]=Calendar.getInstance();
 
             for (int i=0;i<5;i++){
                 calendar[i]= Calendar.getInstance();
