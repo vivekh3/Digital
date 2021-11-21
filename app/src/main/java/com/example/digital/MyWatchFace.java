@@ -105,11 +105,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     calendar[i].setTimeZone(TimeZone.getTimeZone(timeZones[i-1]));
                 }
 
-                //mCalendar.setTimeZone(TimeZone.getDefault());
-                //mCalendarPT.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-                //mCalendarCST.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
-                //mCalendarSYD.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
-                //mCalendarLON.setTimeZone(TimeZone.getTimeZone("Europe/London"));
                 invalidate();
             }
         };
