@@ -94,9 +94,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
         //private Calendar mCalendarSyD2;
         private Calendar mCalendarLON;
         //private Calendar[] calendar;
+        private String[] timeZones={"America/Los_Angeles","America/Chicago","Australia/Sydney","Europe/London"};
+        
         Calendar[] calendar = new Calendar[5];
         String[] displayText=new String[5];
-        private String[] timeZones={"America/Los_Angeles","America/Chicago","Australia/Sydney","Europe/London"};
+
         private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
