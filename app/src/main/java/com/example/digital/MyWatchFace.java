@@ -26,6 +26,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +71,13 @@ public class MyWatchFace extends CanvasWatchFaceService {
         public EngineHandler(MyWatchFace.Engine reference) {
             mWeakReference = new WeakReference<>(reference);
         }
+        public static void main(String[] args){
+            HashMap<String, String> tz = new HashMap<String, String>();
+            tz.put("PT","America/Los_Angeles");
+            tz.put("CT","America/Chicago");
+            System.out.println(tz);
+
+        }
 
         @Override
         public void handleMessage(Message msg) {
@@ -84,18 +92,13 @@ public class MyWatchFace extends CanvasWatchFaceService {
         }
     }
 
+
     private class Engine extends CanvasWatchFaceService.Engine {
 
         private final Handler mUpdateTimeHandler = new EngineHandler(this);
-        private Calendar mCalendar;
-        private Calendar mCalendarPT;
-        private Calendar mCalendarCST;
-        private Calendar mCalendarSYD;
-        //private Calendar mCalendarSyD2;
-        private Calendar mCalendarLON;
+
         //private Calendar[] calendar;
-        private String[] timeZones={"America/Los_Angeles","America/Chicago","Australia/Sydney","Europe/London"};
-        
+        private final String[] timeZones={"America/Los_Angeles","America/Chicago","Australia/Sydney","Europe/London"};
         Calendar[] calendar = new Calendar[5];
         String[] displayText=new String[5];
 
@@ -330,7 +333,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             }
 
 
-            canvas.drawText(String.valueOf(batteryPct+"%"), mXOffset+60, mYOffset+180, mTextPaintZone);
+            canvas.drawText(batteryPct + "%", mXOffset+60, mYOffset+180, mTextPaintZone);
 
 
         }
