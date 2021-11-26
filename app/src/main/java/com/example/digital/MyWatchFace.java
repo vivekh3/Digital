@@ -28,6 +28,7 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -46,6 +47,21 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MyWatchFace extends CanvasWatchFaceService {
+    class Hmtz{
+
+        public void main(String[] args) {
+            HashMap<String,String> map=new HashMap<>();
+            map.put("PT","America/Los_Angeles");
+            map.put("CT","America/Chicago");
+
+        }
+        public void printtz(){
+//            System.out.println(map.get("PT"));
+//            System.out.println(map.get("CT"));
+            System.out.println("$$$$$$$$$$$$$$");
+        }
+
+    }
     private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
 
@@ -65,19 +81,15 @@ public class MyWatchFace extends CanvasWatchFaceService {
         return new Engine();
     }
 
+
+
     private static class EngineHandler extends Handler {
         private final WeakReference<MyWatchFace.Engine> mWeakReference;
 
         public EngineHandler(MyWatchFace.Engine reference) {
             mWeakReference = new WeakReference<>(reference);
         }
-        public static void main(String[] args){
-            HashMap<String, String> tz = new HashMap<String, String>();
-            tz.put("PT","America/Los_Angeles");
-            tz.put("CT","America/Chicago");
-            System.out.println(tz);
 
-        }
 
         @Override
         public void handleMessage(Message msg) {
@@ -97,6 +109,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         private final Handler mUpdateTimeHandler = new EngineHandler(this);
 
+
+
         //private Calendar[] calendar;
         private final String[] timeZones={"America/Los_Angeles","America/Chicago","Australia/Sydney","Europe/London"};
         Calendar[] calendar = new Calendar[5];
@@ -109,6 +123,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 for (int i=1;i<4;i++){
                     calendar[i].setTimeZone(TimeZone.getTimeZone(timeZones[i-1]));
                 }
+
+
 
                 invalidate();
             }
@@ -138,7 +154,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
             setWatchFaceStyle(new WatchFaceStyle.Builder(MyWatchFace.this)
                     .setAcceptsTapEvents(true)
                     .build());
-
+            Hmtz hmtz=new Hmtz();
+            hmtz.printtz();
             //calendar[0]=Calendar.getInstance();
             //calendar[0]=Calendar.getInstance();
 
@@ -216,6 +233,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
             batteryPct = level * 100 / (float)scale;
+
             //System.out.println(batteryPct);
             return batteryPct;
         }
