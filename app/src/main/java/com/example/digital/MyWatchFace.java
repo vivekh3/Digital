@@ -24,12 +24,12 @@ import android.view.WindowInsets;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
-import java.time.ZoneId;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,22 +47,50 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MyWatchFace extends CanvasWatchFaceService {
-    class Hmtz{
+    class Hmtz {
 
-        public void main(String[] args) {
-            HashMap<String,String> map=new HashMap<>();
-            map.put("PT","America/Los_Angeles");
-            map.put("CT","America/Chicago");
+        public TreeMap<String, String> main(String[] args) {
+            TreeMap<String, String> map = new TreeMap<>();
+            map.put("PT", "America/Los_Angeles");
+            map.put("CT", "America/Chicago");
+            map.put("AET", "Australia/Sydney");
+            map.put("GMT", "Europe/London");
+            return map;
+
+
+
+//        public void printhmtz(Map map){
+//
+//            int index = 0;
+//
+//            // For-each loop for iteration
+//            for (Map.Entry<String, String> currentEntry :
+//                    map) {
+//
+//                // Print Key and Values using index
+//
+//                // Get Key using index
+//                System.out.println("Key at " + index + ":"
+//                        + currentEntry.getKey());
+//
+//                // Get value using index
+//                System.out.println("Value at " + index + ":"
+//                        + currentEntry.getValue());
+//                index++;
+//            }
+//            System.out.println("WWWWWW");
+//        }
 
         }
-        public void printtz(){
-//            System.out.println(map.get("PT"));
-//            System.out.println(map.get("CT"));
-            System.out.println("$$$$$$$$$$$$$$");
+
+        private Set<Map.Entry<String, String>> setMap(TreeMap map) {
+            Set<Map.Entry<String, String>> entrySet
+                    = map.entrySet();
+            return entrySet;
+        }
         }
 
-    }
-    private static final Typeface NORMAL_TYPEFACE =
+        private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
 
     /**
@@ -155,7 +183,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     .setAcceptsTapEvents(true)
                     .build());
             Hmtz hmtz=new Hmtz();
-            hmtz.printtz();
+            
+
+//            hmtz.printhmtz();
             //calendar[0]=Calendar.getInstance();
             //calendar[0]=Calendar.getInstance();
 
