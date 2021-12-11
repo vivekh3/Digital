@@ -25,11 +25,14 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,47 +50,60 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MyWatchFace extends CanvasWatchFaceService {
-    class Hmtz {
+    public class Hmtz {
 
-        public TreeMap<String, String> main(String[] args) {
-            TreeMap<String, String> map = new TreeMap<>();
-            map.put("PT", "America/Los_Angeles");
-            map.put("CT", "America/Chicago");
-            map.put("AET", "Australia/Sydney");
-            map.put("GMT", "Europe/London");
-            return map;
+         TreeMap<String,String> tree_map;
 
+        void create(){
+            SortedMap<String, String> sorted_tree_map
+                    = new ConcurrentSkipListMap<String, String>();
 
+            sorted_tree_map.put("PT", "America/Los_Angeles");
+            sorted_tree_map.put("CT", "America/Chicago");
+            sorted_tree_map.put("AET", "Australia/Sydney");
+            sorted_tree_map.put("GMT", "Europe/London");
+            System.out.println("\nElements successfully"
+                    + " inserted in the TreeMap");
+            Set s = sorted_tree_map.entrySet();
 
-//        public void printhmtz(Map map){
-//
-//            int index = 0;
-//
-//            // For-each loop for iteration
-//            for (Map.Entry<String, String> currentEntry :
-//                    map) {
-//
-//                // Print Key and Values using index
-//
-//                // Get Key using index
-//                System.out.println("Key at " + index + ":"
-//                        + currentEntry.getKey());
-//
-//                // Get value using index
-//                System.out.println("Value at " + index + ":"
-//                        + currentEntry.getValue());
-//                index++;
-//            }
-//            System.out.println("WWWWWW");
-//        }
+            // Using iterator in SortedMap
+
+            TreeMap<String, String> tree_map
+                    = new TreeMap<String, String>(sorted_tree_map);
+            for (Map.Entry<String, String> e :
+                    tree_map.entrySet())
+                System.out.println(e.getKey() + " "
+                        + e.getValue());
 
         }
 
-        private Set<Map.Entry<String, String>> setMap(TreeMap map) {
-            Set<Map.Entry<String, String>> entrySet
-                    = map.entrySet();
-            return entrySet;
+        void traverse(){
+            {
+
+                // Display message only
+                System.out.println("\nTraversing the TreeMap:");
+
+                for (Map.Entry<String, String> e :
+                        tree_map.entrySet())
+                    System.out.println(e.getKey() + " "
+                            + e.getValue());
+            }
+
         }
+
+        public void main(String[] args)
+        {
+
+            // Creating a TreeMap
+            create();
+
+            // Inserting the values in the TreeMap
+            //insert();
+
+            // Traversing the TreeMap
+            //traverse();
+        }
+
         }
 
         private static final Typeface NORMAL_TYPEFACE =
@@ -144,6 +160,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
         Calendar[] calendar = new Calendar[5];
         String[] displayText=new String[5];
 
+
         private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -183,7 +200,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     .setAcceptsTapEvents(true)
                     .build());
             Hmtz hmtz=new Hmtz();
-            
+            hmtz.create();
+            //hmtz.insert();
+            //hmtz.traverse();
+
+
 
 //            hmtz.printhmtz();
             //calendar[0]=Calendar.getInstance();
