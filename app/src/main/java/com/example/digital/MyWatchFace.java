@@ -24,6 +24,8 @@ import android.view.WindowInsets;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.time.ZoneId;
+import java.time.format.TextStyle;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Locale;
@@ -50,61 +52,40 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MyWatchFace extends CanvasWatchFaceService {
-    public class Hmtz {
+//    public class Hmtz {
+//
+//        public void create(){
+//            SortedMap<String, String> sorted_tree_map
+//                    = new ConcurrentSkipListMap<String, String>();
+//
+//            sorted_tree_map.put("PT", "America/Los_Angeles");
+//            sorted_tree_map.put("CT", "America/Chicago");
+//            sorted_tree_map.put("AET", "Australia/Sydney");
+//            sorted_tree_map.put("GMT", "Europe/London");
+//            System.out.println("\nElements successfully"
+//                    + " inserted in the TreeMap");
+//
+//
+//            // Using iterator in SortedMap
+//
+//            TreeMap<String, String> tree_map
+//                    = new TreeMap<String, String>(sorted_tree_map);
+//            for (Map.Entry<String, String> e :
+//                    tree_map.entrySet())
+//                System.out.println(e.getKey() + " "
+//                        + e.getValue());
+//
+//        }
+//
+//
+//        public void main(String[] args)
+//        {
+//
+//            create();
+//
+//        }
 
-         TreeMap<String,String> tree_map;
-
-        void create(){
-            SortedMap<String, String> sorted_tree_map
-                    = new ConcurrentSkipListMap<String, String>();
-
-            sorted_tree_map.put("PT", "America/Los_Angeles");
-            sorted_tree_map.put("CT", "America/Chicago");
-            sorted_tree_map.put("AET", "Australia/Sydney");
-            sorted_tree_map.put("GMT", "Europe/London");
-            System.out.println("\nElements successfully"
-                    + " inserted in the TreeMap");
-            Set s = sorted_tree_map.entrySet();
-
-            // Using iterator in SortedMap
-
-            TreeMap<String, String> tree_map
-                    = new TreeMap<String, String>(sorted_tree_map);
-            for (Map.Entry<String, String> e :
-                    tree_map.entrySet())
-                System.out.println(e.getKey() + " "
-                        + e.getValue());
-
-        }
-
-        void traverse(){
-            {
-
-                // Display message only
-                System.out.println("\nTraversing the TreeMap:");
-
-                for (Map.Entry<String, String> e :
-                        tree_map.entrySet())
-                    System.out.println(e.getKey() + " "
-                            + e.getValue());
-            }
-
-        }
-
-        public void main(String[] args)
-        {
-
-            // Creating a TreeMap
-            create();
-
-            // Inserting the values in the TreeMap
-            //insert();
-
-            // Traversing the TreeMap
-            //traverse();
-        }
-
-        }
+//        }
 
         private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
@@ -152,24 +133,22 @@ public class MyWatchFace extends CanvasWatchFaceService {
     private class Engine extends CanvasWatchFaceService.Engine {
 
         private final Handler mUpdateTimeHandler = new EngineHandler(this);
-
-
-
         //private Calendar[] calendar;
-        private final String[] timeZones={"America/Los_Angeles","America/Chicago","Australia/Sydney","Europe/London"};
-        Calendar[] calendar = new Calendar[5];
-        String[] displayText=new String[5];
+        private final String[] timeZones={"America/Los_Angeles","America/New_York","America/Chicago","Australia/Sydney","GMT"};
+        Calendar[] calendar = new Calendar[timeZones.length+1];
+        String[] displayText = new String[timeZones.length+1];
+        String[] timeZonesShort = new String[timeZones.length+1];
+
+
 
 
         private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 calendar[0].setTimeZone(TimeZone.getDefault());
-                for (int i=1;i<4;i++){
+                for (int i=1;i<=timeZones.length;i++){
                     calendar[i].setTimeZone(TimeZone.getTimeZone(timeZones[i-1]));
                 }
-
-
 
                 invalidate();
             }
@@ -199,24 +178,13 @@ public class MyWatchFace extends CanvasWatchFaceService {
             setWatchFaceStyle(new WatchFaceStyle.Builder(MyWatchFace.this)
                     .setAcceptsTapEvents(true)
                     .build());
-            Hmtz hmtz=new Hmtz();
-            hmtz.create();
-            //hmtz.insert();
-            //hmtz.traverse();
+//            Hmtz hmtz=new Hmtz();
+//            hmtz.create();
 
-
-
-//            hmtz.printhmtz();
-            //calendar[0]=Calendar.getInstance();
-            //calendar[0]=Calendar.getInstance();
-
-            for (int i=0;i<5;i++){
+            for (int i=0;i<=timeZones.length;i++){
                 calendar[i]= Calendar.getInstance();
 
             }
-
-
-
 
             Resources resources = MyWatchFace.this.getResources();
             mYOffset = resources.getDimension(R.dimen.digital_y_offset);
@@ -256,8 +224,14 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
                 // Update time zone in case it changed while we weren"t visible.
                 calendar[0].setTimeZone(TimeZone.getDefault());
-                for (int i=1;i<5;i++){
+                timeZonesShort[0]="";
+                for (int i=1;i<=timeZones.length;i++){
                     calendar[i].setTimeZone(TimeZone.getTimeZone(timeZones[i-1]));
+//                    timeZonesShort[i] = TimeZone.getTimeZone(timeZones[i-1])
+//                            .getDisplayName(false, TimeZone.SHORT);
+                    timeZonesShort[i] = String.valueOf(ZoneId.of(timeZones[i-1]).getDisplayName(TextStyle.SHORT,Locale.US));
+                    System.out.println(timeZonesShort[i]);
+
                 }
 
                 invalidate();
@@ -380,29 +354,33 @@ public class MyWatchFace extends CanvasWatchFaceService {
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             long now = System.currentTimeMillis();
 
-            for (int i=0;i<5;i++){
+            for (int i=0;i<=timeZones.length;i++){
                 calendar[i].setTimeInMillis(now);
             }
 
             String header=String.format("Local | "+calendar[0].getDisplayName(Calendar.DAY_OF_WEEK,Calendar.SHORT, Locale.ENGLISH)+" "+(calendar[0].getDisplayName(Calendar.MONTH,Calendar.SHORT,Locale.ENGLISH))+" "+calendar[0].get(Calendar.DAY_OF_MONTH));
             canvas.drawText(header, mXOffset, mYOffset-40, mTextPaintZone);
+            if (!mAmbient) {
+                for (int i = 0; i <= timeZones.length; i++) {
 
-            for (int i=0;i<5;i++){
-                 displayText[i] = mAmbient
-                        ? String.format("%02d:%02d", calendar[i].get(Calendar.HOUR_OF_DAY),
-                        calendar[i].get(Calendar.MINUTE))
-                        : String.format("%02d:%02d:%02d", calendar[i].get(Calendar.HOUR_OF_DAY),
-                        calendar[i].get(Calendar.MINUTE), calendar[i].get(Calendar.SECOND));
-                if (i==0) {
-                    canvas.drawText(displayText[i], mXOffset, mYOffset, mTextPaint);
+                    if (i == 0) {
+                        displayText[i] = String.format("%02d:%02d:%02d", calendar[i].get(Calendar.HOUR_OF_DAY),
+                                calendar[i].get(Calendar.MINUTE), calendar[i].get(Calendar.SECOND));
+                        canvas.drawText(displayText[i], mXOffset, mYOffset, mTextPaint);
+                    } else {
+                        displayText[i] = String.format(timeZonesShort[i])+" | "+String.format("%02d:%02d", calendar[i].get(Calendar.HOUR_OF_DAY),
+                                calendar[i].get(Calendar.MINUTE));
+                        canvas.drawText(displayText[i], mXOffset, mYOffset + 20 * (i + 1), mTextPaintZone);
+                    }
                 }
-                else{
-                    canvas.drawText(displayText[i], mXOffset, mYOffset+20*(i+1), mTextPaintZone);
-                }
+            }
+            else{
+                displayText[0] = String.format("%02d:%02d", calendar[0].get(Calendar.HOUR_OF_DAY), calendar[0].get(Calendar.MINUTE));
+                        canvas.drawText(displayText[0], mXOffset, mYOffset, mTextPaint);
             }
 
 
-            canvas.drawText(batteryPct + "%", mXOffset+60, mYOffset+180, mTextPaintZone);
+                canvas.drawText(batteryPct + "%", mXOffset+60, mYOffset+180, mTextPaintZone);
 
 
         }
