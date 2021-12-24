@@ -13,9 +13,10 @@
     -->
     <dimen name="inner_frame_layout_padding">5dp</dimen>
     <dimen name="digital_text_size">30dp</dimen>
-    <dimen name="digital_text_size_round">30dp</dimen>
+    <dimen name="digital_text_size_round">55dp</dimen>
     <dimen name="digital_text_size_zone">5dp</dimen>
     <dimen name="digital_text_size_round_zone">10dp</dimen>
+    <dimen name="digital_text_size_date">15dp</dimen>
     <dimen name="time_zone_text">10dp</dimen>
     <dimen name="digital_x_offset">50dp</dimen>
     <dimen name="digital_x_offset_round">50dp</dimen>
