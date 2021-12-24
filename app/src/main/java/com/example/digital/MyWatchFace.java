@@ -50,6 +50,10 @@ public class MyWatchFace extends CanvasWatchFaceService {
     private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
 
+    private static final Typeface NORMAL_TYPEFACE_SLEEPY =
+            Typeface.create(Typeface.SANS_SERIF, 100,true);
+
+
     /**
      * Update rate in milliseconds for interactive mode. Defaults to one second
      * because the watch face needs to update seconds in interactive mode.
@@ -123,6 +127,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
         private Paint mTextPaint;
         private Paint mTextPaintZone;
         private Paint mTextPaintDate;
+        private Paint mTextPaintSleep;
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
          * disable anti-aliasing in ambient mode.
@@ -171,6 +176,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mTextPaintDate.setTypeface(NORMAL_TYPEFACE);
             mTextPaintDate.setAntiAlias(true);
             mTextPaintDate.setColor(
+                    ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+            mTextPaintSleep = new Paint();
+            mTextPaintSleep.setTypeface(NORMAL_TYPEFACE_SLEEPY);
+            mTextPaintSleep.setAntiAlias(true);
+            mTextPaintSleep.setColor(
                     ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
 
         }
@@ -256,6 +266,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mTextPaint.setTextSize(textSize);
             mTextPaintZone.setTextSize(textSizeZone);
             mTextPaintDate.setTextSize(textSizeDate);
+            mTextPaintSleep.setTextSize(textSize);
 
         }
 
@@ -357,7 +368,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             }
             else{
                 displayText[0] = String.format("%02d:%02d", calendar[0].get(Calendar.HOUR_OF_DAY), calendar[0].get(Calendar.MINUTE));
-                        canvas.drawText(displayText[0], bounds.centerX()-mTextPaint.measureText(displayText[0])/2, mYOffset, mTextPaint);
+                        canvas.drawText(displayText[0], bounds.centerX()-mTextPaint.measureText(displayText[0])/2, mYOffset, mTextPaintSleep);
             }
 
 
