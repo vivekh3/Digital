@@ -348,7 +348,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
                         timePaint.getTextBounds(displayText[i],0,displayText[i].length(),timeBounds);
                         int mainTimeX= (int) Math.abs(bounds.centerX()-mTextPaintZone.measureText(displayText[i])/2);
-                        canvas.drawText(displayText[i], mainTimeX, mYOffset + 20 * (i + 1), mTextPaintZone);
+                        canvas.drawText(displayText[i], mainTimeX, mYOffset + 25 * (i + 1), mTextPaintZone);
 
 
 
